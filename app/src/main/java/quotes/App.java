@@ -22,14 +22,12 @@ public class App {
 
         ArrayList<Quote> quotes = jsonParser();
         int random = new Random().nextInt(quotes.size());
-        System.out.println(quotes.get(random));
-        random = new Random().nextInt(quotes.size());
-        System.out.println(quotes.get(random));
+        System.out.println(quotes.get(40));
 
 
     }
 
-    private static ArrayList<Quote> jsonParser() throws IOException {
+    public static ArrayList<Quote> jsonParser() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("app/src/main/resources/recentquotes.json"));
 
         GsonBuilder builder = new GsonBuilder();
