@@ -3,12 +3,33 @@
  */
 package quotes;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
+
+    public static void main(String[] args) throws IOException {
+
+        ArrayList<Quote> quotes = jsonParser();
+        int random = new Random().nextInt(quotes.size());
+        System.out.println(quotes.get(random));
+
+
     }
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+    public static ArrayList<Quote> jsonParser() throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader("app/src/main/resources/recentquotes.json"));
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+
+        return gson.fromJson(reader, new TypeToken<ArrayList<Quote>>() {}.getType());
+
     }
+
 }

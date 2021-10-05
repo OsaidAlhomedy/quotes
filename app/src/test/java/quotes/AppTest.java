@@ -3,12 +3,30 @@
  */
 package quotes;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest {
-    @Test void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+    @DisplayName("tests the application ability to generate random quotes")
+    @Test
+    void appGenRandomQuote() {
+
+        try {
+            ArrayList<Quote> quotes = App.jsonParser();
+//            int random = new Random().nextInt(quotes.size());
+            // I will set a constant random number
+            assertEquals(" “Of course I am not worried about intimidating men. The type of man who will be intimidated by me is exactly the type of man I have no interest in.”  ~ Chimamanda Ngozi Adichi", quotes.get(69).toString());
+            assertEquals(" “as you are.’ says the universe. ‘after…’ you answer. ‘as you are.’ says the universe. ‘before…’ you answer. ‘as you are.’ says the universe. ‘when…’ you answer. ‘as you are.’ says the universe. ‘how…’ you answer. ‘as you are.’ says the universe. ‘why…’ you answer. ‘because you are happening now. right now. right at this moment and your happening is beautiful. the thing that both keeps me alive and brings me to my knees. you don’t even know how breathtaking you are. as you are.’ says the universe through tears. — as you are | you are the prayer”  ~ Nayyirah Wahee", quotes.get(40).toString());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+
+
     }
 }
