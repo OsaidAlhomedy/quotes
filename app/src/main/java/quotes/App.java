@@ -6,15 +6,10 @@ package quotes;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class App {
 
@@ -22,7 +17,7 @@ public class App {
 
         ArrayList<Quote> quotes = jsonParser();
         int random = new Random().nextInt(quotes.size());
-        System.out.println(quotes.get(40));
+        System.out.println(quotes.get(random));
 
 
     }
