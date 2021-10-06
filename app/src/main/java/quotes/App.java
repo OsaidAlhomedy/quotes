@@ -18,8 +18,11 @@ public class App {
     public static void main(String[] args) throws IOException {
 
         ArrayList<Quote> quotes = jsonParser();
-//        int random = new Random().nextInt(quotes.size());
-        System.out.println(quotes.get(quotes.size()-1));
+        int random = new Random().nextInt(quotes.size());
+        System.out.println("The quotes list size after adding ===> " + quotes.size());
+
+        System.out.println("Random quote == > " + quotes.get(random));
+        System.out.println("Last added quote we got from the request == > " + quotes.get(quotes.size() - 1));
 
 
     }
@@ -50,9 +53,9 @@ public class App {
             WebQuote webQuote = gson.fromJson(data, WebQuote.class);
             Quote newQuote = new Quote(webQuote.getQuoteAuthor(), webQuote.getQuoteText());
 
-            System.out.println(newQuote);
-
+            // Bring all the quotes from the json file and add the new quote to it then write the whole thing again
             ArrayList<Quote> listList = jsonParserLocal();
+            System.out.println("The quotes list size before adding ===> " + listList.size());
             listList.add(newQuote);
             App.fileWriter(listList);
 
@@ -74,13 +77,13 @@ public class App {
 
     }
 
-    private static void fileWriter(ArrayList<Quote> list) throws IOException{
+    private static void fileWriter(ArrayList<Quote> list) throws IOException {
 
-        Writer fileWriter = new FileWriter("app/src/main/resources/test.json");
+        Writer fileWriter = new FileWriter("app/src/main/resources/recentquotes.json");
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
 
-        gson.toJson(list,fileWriter);
+        gson.toJson(list, fileWriter);
         fileWriter.close();
 
     }
