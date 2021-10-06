@@ -62,15 +62,7 @@ public class App {
             return listList;
         } else {
 
-
-            BufferedReader reader = new BufferedReader(new FileReader("app/src/main/resources/recentquotes.json"));
-
-            GsonBuilder builder = new GsonBuilder();
-            Gson gson = builder.create();
-
-            ArrayList<Quote> list = gson.fromJson(reader, array);
-            reader.close();
-            return list;
+            return App.jsonParserLocal();
 
         }
 
