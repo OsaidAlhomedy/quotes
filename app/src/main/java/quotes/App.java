@@ -6,9 +6,11 @@ package quotes;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+
+import java.io.*;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 
 public class App {
@@ -17,18 +19,80 @@ public class App {
 
         ArrayList<Quote> quotes = jsonParser();
         int random = new Random().nextInt(quotes.size());
-        System.out.println(quotes.get(random));
+        System.out.println("The quotes list size after adding ===> " + quotes.size());
+
+        System.out.println("Random quote == > " + quotes.get(random));
+        System.out.println("Last added quote we got from the request == > " + quotes.get(quotes.size() - 1));
 
 
     }
 
     public static ArrayList<Quote> jsonParser() throws IOException {
+
+        //HTTP REQUESTING HERE
+        URL url = new URL("http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.setConnectTimeout(5000);
+        con.setReadTimeout(5000);
+        int responseCode = con.getResponseCode();
+
+        Type array = new TypeToken<ArrayList<Quote>>() {
+        }.getType();
+
+        // IF THE REQUEST IS SUCCESSFUL OR NOT
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+
+            InputStreamReader inputStreamReader = new InputStreamReader(con.getInputStream());
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            String data = bufferedReader.readLine();
+            bufferedReader.close();
+
+            Gson gson = new Gson();
+            WebQuote webQuote = gson.fromJson(data, WebQuote.class);
+            Quote newQuote = new Quote(webQuote.getQuoteAuthor(), webQuote.getQuoteText());
+
+            // Bring all the quotes from the json file and add the new quote to it then write the whole thing again
+            ArrayList<Quote> listList = jsonParserLocal();
+            System.out.println("The quotes list size before adding ===> " + listList.size());
+            listList.add(newQuote);
+            App.fileWriter(listList);
+
+            return listList;
+        } else {
+
+            return App.jsonParserLocal();
+
+        }
+
+
+    }
+
+    private static void fileWriter(ArrayList<Quote> list) throws IOException {
+
+        Writer fileWriter = new FileWriter("app/src/main/resources/recentquotes.json");
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+
+        gson.toJson(list, fileWriter);
+        fileWriter.close();
+
+    }
+
+
+    public static ArrayList<Quote> jsonParserLocal() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("app/src/main/resources/recentquotes.json"));
+
+        Type array = new TypeToken<ArrayList<Quote>>() {
+        }.getType();
 
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
 
-        return gson.fromJson(reader, new TypeToken<ArrayList<Quote>>() {}.getType());
+        ArrayList<Quote> list = gson.fromJson(reader, array);
+        reader.close();
+        return list;
 
     }
 
